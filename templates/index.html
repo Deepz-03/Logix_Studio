@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KMap Studio — Digital Logic Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <!-- Welcome Intro Screen (Initial Welcome with Auto Fade-out) -->
+  <div id="welcome-screen" class="welcome-screen" role="dialog" aria-modal="true" aria-label="Welcome to K-Map Studio">
+    <div class="welcome-bg-glow glow-a"></div>
+    <div class="welcome-bg-glow glow-b"></div>
+    <div class="welcome-grid-bg"></div>
+
+    <div class="welcome-card" id="welcome-card">
+      <div class="welcome-badge">
+        <span class="welcome-spark">✦</span>
+        <span>DIGITAL LOGIC LAB &amp; SIMULATOR</span>
+      </div>
+
+      <div class="welcome-emblem-wrap">
+        <div class="welcome-pulse-ring ring-1"></div>
+        <div class="welcome-pulse-ring ring-2"></div>
+        <div class="welcome-emblem">
+          <span class="welcome-k">K</span><span class="welcome-dot">·</span>
+        </div>
+      </div>
+
+      <div class="welcome-text-wrap">
+        <h1 class="welcome-title">Welcome to <span>K-Map Studio</span></h1>
+        <p class="welcome-tagline">Hardware-Grade Boolean Minimization, Logic Visualizer &amp; Circuit Simulator</p>
+      </div>
+
+      <div class="welcome-prompt-box">
+        <div class="welcome-prompt-icon">💡</div>
+        <div class="welcome-prompt-text">
+          <strong>Interactive Logic Studio Ready</strong>
+          <small>Explore Karnaugh Maps (2-4 vars), truth tables, logic gates &amp; adder circuits.</small>
+        </div>
+      </div>
+
+      <div class="welcome-progress-wrap">
+        <div class="welcome-status-row">
+          <span class="welcome-status-txt" id="welcome-status-txt">
+            <span class="welcome-dot-live"></span> Initializing workspace...
+          </span>
+          <span class="welcome-percent" id="welcome-percent">100%</span>
+        </div>
+        <div class="welcome-progress-bar">
+          <div class="welcome-progress-fill" id="welcome-progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="welcome-actions">
+        <button id="welcome-enter-btn" class="welcome-enter-btn" type="button" aria-label="Enter K-Map Studio">
+          <span>Enter Studio</span>
+          <span class="welcome-arrow">→</span>
+        </button>
+        <div class="welcome-auto-note">
+          Auto-launching in <span id="welcome-timer-num">2</span>s <span class="welcome-key-hint">· Press Enter or click to proceed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Initial Interface: Portal Launcher Screen -->
+  <div id="portal-screen" class="portal-screen">
+    <div class="portal-bg-glow glow-1"></div>
+    <div class="portal-bg-glow glow-2"></div>
+    <div class="portal-grid-overlay"></div>
+
+    <header class="portal-header">
+      <div class="brand">
+        <div class="brand-mark">K<span>·</span></div>
+        <div><strong>KMap Studio</strong><small>DIGITAL LOGIC LAB &amp; SIMULATOR</small></div>
+      </div>
+      <div class="portal-header-actions">
+        <button class="btn-replay-intro" id="btn-portal-replay" title="Replay Welcome Intro Screen">
+          <span>✦</span> Welcome Intro
+        </button>
+        <div class="top-pill"><span class="live-dot"></span> SYSTEM ONLINE · READY</div>
+      </div>
+    </header>
+
+    <main class="portal-content">
+      <section class="portal-hero">
+        <div class="hero-badge"><span class="spark">✦</span> DIGITAL LOGIC ENGINEERING WORKBENCH</div>
+        <h1 class="portal-title">Select Your <span>Logic Workspace</span></h1>
+        <p class="portal-subtitle">Hardware-grade simulation &amp; Boolean minimization engines. Choose an interactive laboratory below to begin.</p>
+      </section>
+
+      <div class="portal-cards-grid">
+        <!-- Option 1: K-Map Solver -->
+        <article class="portal-card" data-launch="simplifier" id="card-kmap" tabindex="0" role="region" aria-label="K-Map Solver workspace card">
+          <div class="card-accent-bar accent-kmap"></div>
+          <div class="card-top">
+            <div class="card-icon-wrap icon-kmap">
+              <span class="card-icon">▦</span>
+            </div>
+            <div class="card-badge badge-kmap">BOOLEAN ENGINE · v1.0</div>
+          </div>
+
+          <div class="card-info">
+            <h2 class="card-title">K-Map Solver</h2>
+            <p class="card-tagline">Karnaugh Map Minimization, Truth Table Verification &amp; Circuit Visualizer</p>
+            <p class="card-desc">
+              Analyze 2, 3, and 4-variable logic functions. Generate optimal prime implicant groupings, compute minimal Sum of Products (SOP), verify equivalence against canonical truth tables, and examine gate-level schematics with step-by-step guidance.
+            </p>
+          </div>
+
+          <!-- Mini Interactive Graphic / Preview -->
+          <div class="card-preview preview-kmap">
+            <div class="mini-preview-top">
+              <span class="preview-label">GRID COORDINATES: AB \ CD</span>
+              <span class="mini-expr-pill">F = A'C' + BD</span>
+            </div>
+            <div class="mini-kmap-matrix">
+              <div class="mini-matrix-row">
+                <div class="mini-cell active group-a" title="m0 = 1">1<small>m0</small></div>
+                <div class="mini-cell active group-a" title="m1 = 1">1<small>m1</small></div>
+                <div class="mini-cell" title="m3 = 0">0<small>m3</small></div>
+                <div class="mini-cell" title="m2 = 0">0<small>m2</small></div>
+              </div>
+              <div class="mini-matrix-row">
+                <div class="mini-cell active group-a" title="m4 = 1">1<small>m4</small></div>
+                <div class="mini-cell active group-ab" title="m5 = 1">1<small>m5</small></div>
+                <div class="mini-cell active group-b" title="m7 = 1">1<small>m7</small></div>
+                <div class="mini-cell" title="m6 = 0">0<small>m6</small></div>
+              </div>
+            </div>
+            <div class="mini-preview-footer">
+              <span class="preview-dot dot-cyan"></span> Quad Group (A'C')
+              <span class="preview-dot dot-blue" style="margin-left: 12px;"></span> Pair Group (BD)
+            </div>
+          </div>
+
+          <!-- Feature Pills -->
+          <div class="card-tags">
+            <span class="tag-pill">2, 3 &amp; 4 Variables</span>
+            <span class="tag-pill">Prime Implicants</span>
+            <span class="tag-pill">Canonical Truth Table</span>
+            <span class="tag-pill">2-Level SOP Schematic</span>
+            <span class="tag-pill">Step-by-Step Tutor</span>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="card-footer">
+            <button class="btn btn-launch btn-launch-kmap" data-target="simplifier" id="launch-kmap-btn">
+              Launch K-Map Solver <span class="arrow-icon">→</span>
+            </button>
+            <a href="/kmap" target="_blank" class="card-external-link" title="Open K-Map Solver in new tab" onclick="event.stopPropagation()">
+              New Tab ↗
+            </a>
+          </div>
+        </article>
+
+        <!-- Option 2: Adder Lab -->
+        <article class="portal-card" data-launch="adder" id="card-adder" tabindex="0" role="region" aria-label="Adder Lab workspace card">
+          <div class="card-accent-bar accent-adder"></div>
+          <div class="card-top">
+            <div class="card-icon-wrap icon-adder">
+              <span class="card-icon">⌁</span>
+            </div>
+            <div class="card-badge badge-adder">COMBINATIONAL LAB · LIVE</div>
+          </div>
+
+          <div class="card-info">
+            <h2 class="card-title">Adder Lab</h2>
+            <p class="card-tagline">Half &amp; Full Adder Simulator with Live Signal Propagation</p>
+            <p class="card-desc">
+              Explore arithmetic logic circuits in real time. Toggle live input bits (A, B, Cin) to observe dynamic signal propagation through XOR, AND, and OR gates with animated glowing wires and exhaustive truth table verification.
+            </p>
+          </div>
+
+          <!-- Mini Interactive Graphic / Preview -->
+          <div class="card-preview preview-adder">
+            <div class="mini-preview-top">
+              <span class="preview-label">CIRCUIT: FULL ADDER LOGIC</span>
+              <span class="mini-expr-pill accent-mint">S = A ⊕ B ⊕ Cin</span>
+            </div>
+            <div class="mini-circuit-diagram">
+              <div class="mini-input-pins">
+                <span class="mini-pin high" title="A = 1">A = 1</span>
+                <span class="mini-pin high" title="B = 1">B = 1</span>
+                <span class="mini-pin low" title="Cin = 0">Cin = 0</span>
+              </div>
+              <div class="mini-gate-rack">
+                <span class="mini-gate gate-xor">XOR</span>
+                <span class="mini-gate gate-and">AND</span>
+                <span class="mini-gate gate-or">OR</span>
+              </div>
+              <div class="mini-output-rack">
+                <div class="mini-out-chip"><span class="out-lbl">SUM</span><strong>0</strong></div>
+                <div class="mini-out-chip active-out"><span class="out-lbl">CARRY</span><strong>1</strong></div>
+              </div>
+            </div>
+            <div class="mini-preview-footer">
+              <span class="preview-dot dot-mint"></span> Active High Wire (1)
+              <span class="preview-dot dot-gray" style="margin-left: 12px;"></span> Low Wire (0)
+            </div>
+          </div>
+
+          <!-- Feature Pills -->
+          <div class="card-tags">
+            <span class="tag-pill">Half &amp; Full Adder</span>
+            <span class="tag-pill">Live Bit Toggles</span>
+            <span class="tag-pill">Animated Wire Glow</span>
+            <span class="tag-pill">Dynamic SVG Schematic</span>
+            <span class="tag-pill">Live State Tracking</span>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="card-footer">
+            <button class="btn btn-launch btn-launch-adder" data-target="adder" id="launch-adder-btn">
+              Launch Adder Lab <span class="arrow-icon">→</span>
+            </button>
+            <a href="/adder-lab" target="_blank" class="card-external-link" title="Open Adder Lab in new tab" onclick="event.stopPropagation()">
+              New Tab ↗
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <!-- Feature specs bar -->
+      <div class="portal-specs-bar">
+        <div class="spec-item">
+          <span class="spec-num">01</span>
+          <div>
+            <strong>Quine–McCluskey Core</strong>
+            <small>Formal Boolean minimization with Petrick's cover</small>
+          </div>
+        </div>
+        <div class="spec-divider"></div>
+        <div class="spec-item">
+          <span class="spec-num">02</span>
+          <div>
+            <strong>Live Gate Schematics</strong>
+            <small>Dynamic vector SVG circuits with real-time logic state</small>
+          </div>
+        </div>
+        <div class="spec-divider"></div>
+        <div class="spec-item">
+          <span class="spec-num">03</span>
+          <div>
+            <strong>100% Truth Verification</strong>
+            <small>Automated equivalence check between canonical &amp; minimized</small>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="portal-footer">
+      <span>© KMap Studio · Digital Logic Lab &amp; Simulator</span>
+      <span class="portal-badge-mode">LOCAL WORKSPACE MODE ●</span>
+    </footer>
+  </div>
+
+  <!-- Workspace Shell for Tools -->
+  <div class="app-shell hidden" id="workspace-screen">
+    <aside class="sidebar">
+      <div class="brand" id="sidebar-brand-btn" style="cursor: pointer;" title="Return to Portal Hub">
+        <div class="brand-mark">K<span>·</span></div>
+        <div><strong>KMap Studio</strong><small>DIGITAL LOGIC LAB</small></div>
+      </div>
+      <div class="nav-label">WORKSPACE</div>
+      <button class="nav-item nav-hub-item" data-tab="portal" id="nav-hub-btn"><span>⊞</span> Workspace Hub <b>HUB</b></button>
+      <button class="nav-item active" data-tab="simplifier" id="nav-simplifier-btn"><span>▦</span> K-map Solver <b>01</b></button>
+      <button class="nav-item" data-tab="adder" id="nav-adder-btn"><span>⌁</span> Adder Lab <b>02</b></button>
+      <div class="sidebar-bottom">
+        <div class="status-dot"></div>
+        <div><strong>Local workspace</strong><small>Ready to calculate</small></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-hub-return" id="btn-topbar-hub" title="Return to Home Portal">
+            <span class="hub-arrow">←</span> Home Portal
+          </button>
+          <div class="topbar-title-wrap">
+            <div class="breadcrumb" id="topbar-breadcrumb">
+              <span class="crumb-link" id="crumb-home-link">Hub</span>
+              <span class="crumb-sep">/</span>
+              <span class="crumb-active" id="crumb-current-tool">K-map &amp; Truth Table Studio</span>
+            </div>
+            <h1 id="page-title">K-map &amp; Truth Table Studio</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-replay-intro" id="btn-workspace-replay" title="Replay Welcome Intro Screen">
+            <span>✦</span> Welcome Intro
+          </button>
+          <span class="workspace-pill-tag" id="workspace-pill-tag">K-MAP WORKSPACE</span>
+          <div class="top-pill"><span class="live-dot"></span> SYSTEM ONLINE</div>
+        </div>
+      </header>
+
+      <section id="simplifier-panel">
+        <div class="intro-row">
+          <div>
+            <h2>Simplify. Visualize. Verify.</h2>
+            <p>Interactive Karnaugh map minimization with real-time automatic canonical truth table verification.</p>
+          </div>
+          <div class="tag">BOOLEAN ENGINE <span>v1.0</span></div>
+        </div>
+
+        <div class="main-solver-layout">
+          <section class="panel input-panel">
+            <div class="panel-heading">
+              <div class="step-number">01</div>
+              <div>
+                <h3>Function Inputs</h3>
+                <p>Choose variables &amp; minterms.</p>
+              </div>
+            </div>
+            <label class="field-label" for="variable-count">NUMBER OF VARIABLES</label>
+            <div class="segmented" id="variable-picker">
+              <button data-vars="2">2 <small>vars</small></button>
+              <button data-vars="3">3 <small>vars</small></button>
+              <button class="selected" data-vars="4">4 <small>vars</small></button>
+            </div>
+            <div class="minterm-heading"><label class="field-label">MINTERMS</label><span id="range-label">0–15</span>
+            </div>
+            <div class="quick-presets">
+              <button class="preset-btn" id="preset-all">All 1s</button>
+              <button class="preset-btn" id="preset-none">Clear 0s</button>
+              <button class="preset-btn" id="preset-invert">Invert</button>
+            </div>
+            <p class="hint">Select minterms, then click Simplify to solve.</p>
+            <div id="minterm-picker" class="minterm-picker"></div>
+            <div class="input-actions">
+              <button class="btn btn-quiet" id="clear-btn">Clear all</button>
+              <button class="btn btn-primary" id="solve-btn">Simplify <span>↗</span></button>
+            </div>
+            <div id="error-message" class="error-message" role="alert"></div>
+          </section>
+
+          <section class="panel result-panel">
+            <div class="panel-heading">
+              <div class="step-number">02</div>
+              <div>
+                <h3>K-map Visualization</h3>
+                <p>Groups are color-coded to match their terms.</p>
+              </div><span class="auto-badge">LIVE MAP</span>
+            </div>
+            <div class="map-wrap">
+              <div class="map-axis" id="map-axis">AB \ CD</div>
+              <div id="kmap" class="kmap empty-map">
+                <div class="empty-state"><span>▦</span><strong>Your K-map appears here</strong><small>Choose minterms,
+                    then click Simplify.</small></div>
+              </div>
+            </div>
+            <div class="legend" id="group-legend"></div>
+            <div class="expression-card">
+              <div class="expression-top"><span>MINIMIZED SOP EXPRESSION</span><span class="spark">✦</span></div>
+              <div id="expression" class="expression">F(A,B,C,D) = <span class="muted">—</span></div>
+              <div class="expression-foot"><span class="check-icon">✓</span> Minimum-cover solution for selected
+                minterms</div>
+            </div>
+          </section>
+
+          <section class="panel truth-panel" id="truth-panel">
+            <div class="panel-heading">
+              <div class="step-number">03</div>
+              <div>
+                <h3 id="truth-table-title">Canonical Truth Table</h3>
+                <p id="truth-table-subtitle">Verified against minimized Boolean expression.</p>
+              </div>
+              <span id="verification-status" class="auto-badge badge-pass">STANDBY</span>
+            </div>
+            <div id="truth-table-content">
+              <div class="empty-note">Click Simplify to generate and verify the truth table.</div>
+            </div>
+          </section>
+        </div>
+
+        <div class="lower-grid">
+          <section class="panel">
+            <div class="panel-heading compact">
+              <div class="step-number">04</div>
+              <div>
+                <h3>Group breakdown</h3>
+                <p>Understand what each group contributes.</p>
+              </div>
+            </div>
+            <div id="group-breakdown" class="group-breakdown">
+              <div class="empty-note">Run the simplifier to see each group.</div>
+            </div>
+          </section>
+          <section class="panel circuit-panel" id="circuit-panel">
+            <div class="panel-heading compact">
+              <div class="step-number">05</div>
+              <div>
+                <h3>Logic Circuit Visualizer</h3>
+                <p>Gate-level schematic implementation of the minimized SOP expression.</p>
+              </div>
+              <span class="auto-badge" id="circuit-gate-count">2-LEVEL SOP</span>
+            </div>
+            <div class="circuit-info-bar">
+              <div class="circuit-meta-item">
+                <span class="meta-label">ARCHITECTURE</span>
+                <strong id="circuit-arch-name">AND-OR 2-Level Network</strong>
+              </div>
+              <div class="circuit-meta-item">
+                <span class="meta-label">GATE COUNT</span>
+                <strong id="circuit-gate-summary">0 Gates</strong>
+              </div>
+              <div class="circuit-meta-item">
+                <span class="meta-label">OUTPUT FUNCTION</span>
+                <strong id="circuit-output-formula" class="accent-cyan">F = —</strong>
+              </div>
+            </div>
+            <div class="circuit-canvas-wrap" id="kmap-circuit-container">
+              <div class="empty-note">Generate a function to visualize its logic gate schematic.</div>
+            </div>
+            <div class="gate-legend">
+              <div class="gate-legend-item"><span class="legend-symbol sym-and">AND</span> Product Gates</div>
+              <div class="gate-legend-item"><span class="legend-symbol sym-or">OR</span> Sum Gate</div>
+              <div class="gate-legend-item"><span class="legend-symbol sym-not">NOT</span> Inverters</div>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel tutor-panel" id="tutor-panel">
+          <div class="panel-heading">
+            <div class="step-number">06</div>
+            <div>
+              <h3>Step-by-Step Tutor</h3>
+              <p>Understand how your Boolean expression is simplified.</p>
+            </div>
+            <span class="auto-badge">LEARN MODE</span>
+          </div>
+          <div id="tutor-content">
+            <div class="empty-note">Click Simplify function to generate your explanation.</div>
+          </div>
+        </section>
+      </section>
+
+      <section id="adder-panel" class="hidden">
+        <div class="intro-row">
+          <div>
+            <h2>Adder Lab</h2>
+            <p>Explore the Sum and Carry outputs of half adders and full adders.</p>
+          </div>
+          <div class="tag">COMBINATIONAL LOGIC <span>LAB</span></div>
+        </div>
+        <div class="adder-grid">
+          <section class="panel">
+            <div class="panel-heading">
+              <div class="step-number">01</div>
+              <div>
+                <h3>Choose an adder</h3>
+                <p>Change inputs and inspect the output.</p>
+              </div>
+            </div>
+            <label class="field-label">CIRCUIT TYPE</label>
+            <div class="segmented" id="adder-type"><button class="selected" data-kind="half">Half adder</button><button
+                data-kind="full">Full adder</button></div>
+            <div class="bit-inputs" id="bit-inputs">
+              <label>A <button class="bit-toggle" data-bit="a" aria-label="Toggle A">0</button></label>
+              <label>B <button class="bit-toggle" data-bit="b" aria-label="Toggle B">0</button></label>
+            </div>
+            <div class="input-actions"><button class="btn btn-quiet" id="adder-reset">Reset inputs</button><button
+                class="btn btn-primary" id="adder-calc">Calculate outputs ↗</button></div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading">
+              <div class="step-number">02</div>
+              <div>
+                <h3>Output signals</h3>
+                <p>Outputs update from the selected input bits.</p>
+              </div>
+            </div>
+            <div class="output-cards">
+              <div class="output-card"><span>SUM (S)</span><strong id="sum-output">0</strong><small id="sum-formula">A ⊕
+                  B</small></div>
+              <div class="output-card"><span>CARRY (Cout)</span><strong id="carry-output">0</strong><small
+                  id="carry-formula">AB</small></div>
+            </div>
+            <div class="truth-note"><strong>How it works</strong>
+              <p id="adder-explanation">Sum is 1 when the inputs differ. Carry is 1 only when both inputs are 1.</p>
+            </div>
+          </section>
+          <section class="panel adder-truth-panel">
+            <div class="panel-heading">
+              <div class="step-number">03</div>
+              <div>
+                <h3>Adder Truth Table Verification</h3>
+                <p>Complete input-output specification with live input signal tracking.</p>
+              </div><span class="auto-badge" id="adder-truth-status">LIVE TRACKING</span>
+            </div>
+            <div id="adder-truth-table-content"></div>
+          </section>
+          <section class="panel adder-circuit-panel" style="grid-column: 1 / -1;">
+            <div class="panel-heading">
+              <div class="step-number">04</div>
+              <div>
+                <h3 id="adder-circuit-title">Adder Logic Circuit Visualizer</h3>
+                <p id="adder-circuit-subtitle">Interactive schematic diagram with live logic state propagation.</p>
+              </div>
+              <span class="auto-badge" id="adder-circuit-badge">LIVE SCHEMATIC</span>
+            </div>
+            <div class="circuit-info-bar">
+              <div class="circuit-meta-item">
+                <span class="meta-label">CIRCUIT TOPOLOGY</span>
+                <strong id="adder-circuit-topology">XOR-AND Logic Network</strong>
+              </div>
+              <div class="circuit-meta-item">
+                <span class="meta-label">GATE METRICS</span>
+                <strong id="adder-circuit-gates">1 XOR · 1 AND</strong>
+              </div>
+              <div class="circuit-meta-item">
+                <span class="meta-label">LIVE SIGNALS</span>
+                <strong id="adder-live-status" class="accent-green">S=0, Cout=0</strong>
+              </div>
+            </div>
+            <div class="circuit-canvas-wrap adder-canvas-wrap" id="adder-circuit-container">
+              <!-- SVG schematic generated dynamically by app.js -->
+            </div>
+            <div class="circuit-hint">
+              <span>💡 Wires glow cyan/mint when HIGH (1) and stay dark when LOW (0). Click the input toggles above to
+                watch logic propagate in real-time.</span>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <footer><span>© KMap Studio · Digital Logic Lab</span><span>Built for learning digital logic <b>●</b></span>
+      </footer>
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>
